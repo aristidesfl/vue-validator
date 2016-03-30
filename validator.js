@@ -124,12 +124,19 @@
 							_validate:{},
 							valid: true,
 							modified: false,
+							touched: false,
 							invalid: false
 						});
-						
+					}
 						this._onValidate = vm.$on('validate', function () {
 							this.validate(model);
 						}.bind(this));
+
+						this._onBlur = function () {
+							this.el.classList.add('touched');
+							vm.$set('validator.'+model+'.touched', true);
+						}.bind(this);
+						_.on(this.el,'blur', this._onBlur);
 
 						Vue.nextTick(function () {
 							startValue = this.vm.$get(model);
@@ -140,7 +147,7 @@
 							}.bind(this),true);
 
 						}.bind(this));
-					}
+
 
 					vm.$set('validator.'+model+'._validate.'+(this.arg || this.expression), this.expression);
 
